@@ -30,9 +30,9 @@ jobs:
           userNameHeight: 19
           itemTemplate: >
             <g transform="translate({{ x }}, {{ y }})">
-              <a xlink:href="{{ url }}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{ name }}" id="{{ name }}">
-                <image width="{{ width }}" height="{{ height }}" xlink:href="{{ avatar }}" />
-                <text x="0" y="69" dy="14" font-size="14">{{ name }}</text>
+              <a xlink:href="{{{ url }}}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{{ name }}}" id="{{{ name }}}">
+                <image width="{{ width }}" height="{{ height }}" xlink:href="{{{ avatar }}}" />
+                <text x="0" y="74" dy="14" font-size="14">{{{ name }}}</text>
               </a>
             </g>
 

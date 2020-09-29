@@ -57,7 +57,7 @@ export namespace Util {
     const avatarWidth = options.avatarSize
     const avatarHeight = options.avatarSize
     const itemWidth = avatarWidth + 2 * avatarMargin
-    const itemHeight = avatarHeight + 2 * avatarMargin
+    const itemHeight = avatarHeight + 2 * avatarMargin + options.userNameHeight
     const colCount = Math.floor(svgWidth / itemWidth)
 
     return itemHeight * Math.ceil(total / colCount)

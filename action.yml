@@ -70,8 +70,8 @@ inputs:
     description: Template to render user item.
     required: false
     default: >
-      <a xlink:href="{{ url }}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{ name }}" id="{{ name }}">
-        <image x="{{ x }}" y="{{ y }}" width="{{ width }}" height="{{ height }}" xlink:href="{{ avatar }}" />
+      <a xlink:href="{{{ url }}}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{{ name }}}" id="{{{ name }}}">
+        <image x="{{ x }}" y="{{ y }}" width="{{ width }}" height="{{ height }}" xlink:href="{{{ avatar }}}" />
       </a>
 
 
