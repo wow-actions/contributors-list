@@ -32,7 +32,7 @@ export namespace Util {
     }
   }
 
-  export async function getFile(
+  export async function getFileContent(
     octokit: ReturnType<typeof getOctokit>,
     path: string,
   ) {
@@ -99,6 +99,25 @@ export namespace Util {
     })
   }
 
+  function getBBox(index: number, options: ReturnType<typeof getInputs>) {
+    const svgWidth = options.svgWidth
+    const avatarMargin = options.avatarMargin
+    const avatarWidth = options.avatarSize
+    const avatarHeight = options.avatarSize
+    const colCount = Math.floor(svgWidth / (avatarWidth + 2 * avatarMargin))
+    const colIndex = index % colCount
+    const rowIndex = Math.floor(index / colCount)
+
+    return {
+      x: avatarMargin + colIndex * (avatarWidth + avatarMargin),
+      y:
+        avatarMargin +
+        rowIndex * (avatarHeight + avatarMargin + options.userNameHeight),
+      width: avatarWidth,
+      height: avatarHeight,
+    }
+  }
+
   export async function getUsers(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
@@ -126,25 +145,8 @@ export namespace Util {
       bots.sort((a, b) => b.contributions - a.contributions)
     }
 
-    const getBBox = (index: number) => {
-      const svgWidth = options.svgWidth
-      const avatarMargin = options.avatarMargin
-      const avatarWidth = options.avatarSize
-      const avatarHeight = options.avatarSize
-      const colCount = Math.floor(svgWidth / (avatarWidth + 2 * avatarMargin))
-      const colIndex = index % colCount
-      const rowIndex = Math.floor(index / colCount)
-
-      return {
-        x: avatarMargin + colIndex * (avatarWidth + avatarMargin),
-        y: avatarMargin + rowIndex * (avatarHeight + avatarMargin),
-        width: avatarWidth,
-        height: avatarHeight,
-      }
-    }
-
     const deferred1 = contributors.map(async (user, i) => ({
-      ...getBBox(i),
+      ...getBBox(i, options),
       name: user.login,
       avatar: await getAvatar(user.avatar_url, options),
       url: user.html_url,
@@ -152,7 +154,7 @@ export namespace Util {
     }))
 
     const deferred2 = bots.map(async (user, i) => ({
-      ...getBBox(i),
+      ...getBBox(i, options),
       name: user.login,
       avatar: await getAvatar(user.avatar_url, options),
       url: user.html_url,
@@ -160,7 +162,7 @@ export namespace Util {
     }))
 
     const deferred3 = collaborators.map(async (user, i) => ({
-      ...getBBox(i),
+      ...getBBox(i, options),
       name: user.login,
       avatar: await getAvatar(user.avatar_url, options),
       url: user.html_url,
