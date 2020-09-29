@@ -11,6 +11,10 @@ export namespace Action {
       const none = options.repo.split('/')
       const owner = none.length === 2 ? none[0] : context.repo.owner
       const repo = none.length === 2 ? none[1] : context.repo.repo
+
+      core.debug(`inputs: \n ${JSON.stringify(options, null, 2)}`)
+      core.debug(`owner: ${owner}, repo: ${repo}`)
+
       const users = Util.getUsers(octokit, owner, repo, options)
 
       core.debug(`${JSON.stringify(users, null, 2)}`)

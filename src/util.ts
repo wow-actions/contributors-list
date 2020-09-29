@@ -45,6 +45,9 @@ export namespace Util {
       contributors.sort((a, b) => b.contributions - a.contributions)
     }
 
+    core.debug('contributors: ')
+    core.debug(JSON.stringify(contributorsRes.data, null, 2))
+
     const users: {
       name: string
       avatar: string
@@ -71,6 +74,9 @@ export namespace Util {
         repo,
         affiliation: options.collaboratorType,
       })
+
+      core.debug('collaborators: ')
+      core.debug(JSON.stringify(collaborators, null, 2))
 
       collaborators.forEach(({ login, avatar_url, html_url }) => {
         users.push({
