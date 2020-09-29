@@ -68,8 +68,6 @@ export namespace Util {
 
   async function getAvatar(url: string, options: ReturnType<typeof getInputs>) {
     return fetch(url).then(async (res) => {
-      console.log(res.headers, res.headers.keys(), res.headers.values())
-
       const type = res.headers.get('content-type')
       const prefix = `data:${type};base64,`
 
