@@ -80,7 +80,7 @@ export namespace Util {
           )
           const r = size / 2
           const overlay = Buffer.from(
-            `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
+            `<svg><circle cx="${r}" cy="${r}" r="${r}" fill="#fff" /></svg>`,
           )
 
           return sharp(buffer)
