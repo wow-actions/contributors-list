@@ -18,8 +18,8 @@ export namespace Util {
     return {
       repo: core.getInput('repo') || '/',
       sort: core.getInput('sort') === 'true',
+      round: core.getInput('round') !== 'false',
       includeBots: core.getInput('includeBots') === 'true',
-      roundAvatar: core.getInput('roundAvatar') !== 'false',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
       svgPath: core.getInput('svgPath') || './contributors.svg',
       svgTemplate: core.getInput('svgTemplate'),
@@ -72,26 +72,24 @@ export namespace Util {
       const prefix = `data:${type};base64,`
 
       return res.buffer().then((buffer) => {
-        if (options.roundAvatar) {
+        if (options.round) {
           const box = imageSize(buffer)
           const size = Math.min(
             box.width || options.avatarSize,
             box.height || options.avatarSize,
           )
           const r = size / 2
-          const mask = Buffer.from(
+          const overlay = Buffer.from(
             `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
           )
 
           return sharp(buffer)
-            .resize(size, size)
             .composite([
               {
-                input: mask,
+                input: overlay,
                 blend: 'dest-in',
               },
             ])
-            .webp()
             .toBuffer()
             .then((buffer) => prefix + buffer.toString('base64'))
         }

@@ -17,16 +17,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
           svgPath: examples/contributors-round.svg
+          round: true
           includeBots: true
-          roundAvatar: true
 
       - uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
           svgPath: examples/contributors-square.svg
+          round: false
           includeBots: true
-          roundAvatar: false
 
       - uses: ./
         with:

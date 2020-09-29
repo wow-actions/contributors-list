@@ -15,6 +15,11 @@ inputs:
     required: false
     default: true
 
+  round:
+    description: Should clip the avatar to rounded.
+    required: false
+    default: true
+
   affiliation:
     description: 'Type of collaborators options: all/direct/outside.'
     required: false
@@ -34,11 +39,6 @@ inputs:
     description: Width of the generated SVG.
     required: false
     default: 740
-
-  roundAvatar:
-    description: Should round clip the avatar.
-    required: false
-    default: true
 
   avatarSize:
     description: Size of user avatar.
