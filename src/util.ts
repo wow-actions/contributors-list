@@ -86,24 +86,18 @@ export namespace Util {
             `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
           )
 
-          return (
-            sharp(buffer)
-              .composite([
-                {
-                  input: overlay,
-                  blend: 'dest-in',
-                },
-              ])
-              // .flatten(false, {
-              //   background: { r: 255, g: 255, b: 255, alpha: 0 },
-              // })
-              .png()
-              .toBuffer()
-              .then(
-                (buffer) =>
-                  `data:image/png;base64,${buffer.toString('base64')}`,
-              )
-          )
+          return sharp(buffer)
+            .composite([
+              {
+                input: overlay,
+                blend: 'dest-in',
+              },
+            ])
+            .png()
+            .toBuffer()
+            .then(
+              (buffer) => `data:image/png;base64,${buffer.toString('base64')}`,
+            )
         }
 
         return prefix + buffer.toString('base64')
