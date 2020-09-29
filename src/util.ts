@@ -93,6 +93,7 @@ export namespace Util {
                 blend: 'dest-in',
               },
             ])
+            .flatten({ background: { r: 0, g: 0, b: 0, alpha: 0 } })
             .toBuffer()
             .then((buffer) => prefix + buffer.toString('base64'))
         }
