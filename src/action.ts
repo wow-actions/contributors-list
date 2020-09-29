@@ -17,7 +17,7 @@ export namespace Action {
 
       const users = await Util.getUsers(octokit, owner, repo, options)
 
-      core.debug(`${JSON.stringify(users, null, 2)}`)
+      // core.debug(`${JSON.stringify(users, null, 2)}`)
 
       mustache.parse(options.itemTemplate)
 
