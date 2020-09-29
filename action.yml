@@ -1,4 +1,4 @@
-name: Welcome New Users
+name: Contributors List
 description: Give a welcome comment on first issue or PR 💖.
 author: bubkoo <bubkoo.wy@gmail.com>
 inputs:
@@ -34,6 +34,11 @@ inputs:
     description: Width of the generated SVG.
     required: false
     default: 740
+
+  roundAvatar:
+    description: Should round clip the avatar.
+    required: false
+    default: true
 
   avatarSize:
     description: Size of user avatar.

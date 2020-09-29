@@ -1,6 +1,8 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import sharp from 'sharp'
 import fetch from 'node-fetch'
+import { imageSize } from 'image-size'
 
 export namespace Util {
   export function getOctokit() {
@@ -17,6 +19,7 @@ export namespace Util {
       repo: core.getInput('repo') || '/',
       sort: core.getInput('sort') === 'true',
       includeBots: core.getInput('includeBots') === 'true',
+      roundAvatar: core.getInput('roundAvatar') !== 'false',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
       svgPath: core.getInput('svgPath') || './contributors.svg',
       svgTemplate: core.getInput('svgTemplate'),
@@ -65,9 +68,38 @@ export namespace Util {
 
   async function getAvatar(url: string, options: ReturnType<typeof getInputs>) {
     return fetch(url).then(async (res) => {
+      console.log(res.headers, res.headers.keys(), res.headers.values())
+
       const type = res.headers.get('content-type')
       const prefix = `data:${type};base64,`
-      return res.buffer().then((buffer) => prefix + buffer.toString('base64'))
+
+      return res.buffer().then((buffer) => {
+        if (options.roundAvatar) {
+          const box = imageSize(buffer)
+          const size = Math.min(
+            box.width || options.avatarSize,
+            box.height || options.avatarSize,
+          )
+          const r = size / 2
+          const mask = Buffer.from(
+            `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
+          )
+
+          return sharp(buffer)
+            .resize(size, size)
+            .composite([
+              {
+                input: mask,
+                blend: 'dest-in',
+              },
+            ])
+            .webp()
+            .toBuffer()
+            .then((buffer) => prefix + buffer.toString('base64'))
+        }
+
+        return prefix + buffer.toString('base64')
+      })
     })
   }
 
