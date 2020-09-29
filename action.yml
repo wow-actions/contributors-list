@@ -1,0 +1,64 @@
+name: Welcome New Users
+description: Give a welcome comment on first issue or PR 💖.
+author: bubkoo <bubkoo.wy@gmail.com>
+inputs:
+  GITHUB_TOKEN:
+    description: Your GitHub token for authentication.
+    required: true
+
+  repo:
+    description: The repository name in form of "userName/repoName".
+    required: false
+
+  sort:
+    description: Should sort the result by contributions.
+    required: false
+    default: true
+
+  includeCollaborators:
+    description: Should include collaborators or not.
+    required: false
+    default: true
+
+  collaboratorType:
+    description: 'Type of collaborators options: all/direct/outside.'
+    required: false
+    default: direct
+
+  includeBots:
+    description: Should include bots or not.
+    required: false
+    default: true
+
+  svgName:
+    description: Name of the generated SVG.
+    required: false
+    default: contributors
+
+  svgPath:
+    description: Path to save the generated SVG.
+    required: false
+    default: ./
+
+  svgWidth:
+    description: Width of the generated SVG.
+    required: false
+    default: 768
+
+  toBase64:
+    description: Should convert avatar url to base64 or not.
+    required: false
+    default: true
+
+  avatarSize:
+    description: Size of user avatar.
+    required: false
+    default: 64
+
+runs:
+  using: node12
+  main: dist/index.js
+
+branding:
+  icon: heart
+  color: orange
