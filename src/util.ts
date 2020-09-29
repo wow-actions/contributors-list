@@ -116,10 +116,10 @@ export namespace Util {
       'GET https://avatars0.githubusercontent.com/u/6045824?v=4',
       {
         headers: {
-          Accept: 'application/json',
+          accept: 'application/vnd.github.v3+json',
         },
         mediaType: {
-          format: 'application/json',
+          format: 'application/vnd.github.VERSION+json',
         },
       },
     )
