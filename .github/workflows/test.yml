@@ -16,8 +16,17 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
-          svgPath: examples/contributors.svg
+          svgPath: examples/contributors-round.svg
           includeBots: true
+          roundAvatar: true
+
+      - uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: examples/contributors-square.svg
+          includeBots: true
+          roundAvatar: false
 
       - uses: ./
         with:
