@@ -113,6 +113,9 @@ export namespace Util {
     const res = await octokit.request(
       'GET https://avatars0.githubusercontent.com/u/6045824?v=4',
       {
+        headers: {
+          Accept: 'application/vnd.github.VERSION+json',
+        },
         mediaType: {
           format: 'application/vnd.github.VERSION+json',
         },

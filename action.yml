@@ -67,7 +67,7 @@ inputs:
         height="{{ contributorsHeight }}"
       >
         <style>.contributor-link { cursor: pointer; }</style>
-        {{ contributors }}
+        {{{ contributors }}}
       </svg>
 
 
