@@ -49,7 +49,7 @@ export namespace Action {
         ),
       })
 
-      const preResponse = await Util.getFile(octokit, options.svgPath)
+      const preResponse = await Util.getFileContent(octokit, options.svgPath)
       const preContent = preResponse
         ? Buffer.from(preResponse.data.content, 'base64').toString()
         : null

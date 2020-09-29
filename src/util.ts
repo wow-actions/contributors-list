@@ -66,7 +66,10 @@ export namespace Util {
     return itemHeight * Math.ceil(total / colCount)
   }
 
-  async function getAvatar(url: string, options: ReturnType<typeof getInputs>) {
+  async function fetchAvatar(
+    url: string,
+    options: ReturnType<typeof getInputs>,
+  ) {
     return fetch(url).then(async (res) => {
       const type = res.headers.get('content-type')
       const prefix = `data:${type};base64,`
@@ -80,7 +83,7 @@ export namespace Util {
           )
           const r = size / 2
           const overlay = Buffer.from(
-            `<svg><circle cx="${r}" cy="${r}" r="${r}" fill="#fff" /></svg>`,
+            `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
           )
 
           return sharp(buffer)
@@ -99,7 +102,7 @@ export namespace Util {
     })
   }
 
-  function getBBox(index: number, options: ReturnType<typeof getInputs>) {
+  function getItemBBox(index: number, options: ReturnType<typeof getInputs>) {
     const svgWidth = options.svgWidth
     const avatarMargin = options.avatarMargin
     const avatarWidth = options.avatarSize
@@ -146,25 +149,25 @@ export namespace Util {
     }
 
     const deferred1 = contributors.map(async (user, i) => ({
-      ...getBBox(i, options),
+      ...getItemBBox(i, options),
       name: user.login,
-      avatar: await getAvatar(user.avatar_url, options),
+      avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: user.type === 'Bot' ? 'bot' : 'contributor',
     }))
 
     const deferred2 = bots.map(async (user, i) => ({
-      ...getBBox(i, options),
+      ...getItemBBox(i, options),
       name: user.login,
-      avatar: await getAvatar(user.avatar_url, options),
+      avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: 'bot',
     }))
 
     const deferred3 = collaborators.map(async (user, i) => ({
-      ...getBBox(i, options),
+      ...getItemBBox(i, options),
       name: user.login,
-      avatar: await getAvatar(user.avatar_url, options),
+      avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: 'collaborator',
     }))
