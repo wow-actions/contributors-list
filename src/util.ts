@@ -115,28 +115,38 @@ export namespace Util {
       }
     }
 
-    return {
-      contributors: contributors.map(async (user, i) => ({
-        ...getBBox(i),
-        name: user.login,
-        avatar: await getAvatar(user.avatar_url, options),
-        url: user.html_url,
-        type: user.type === 'Bot' ? 'bot' : 'contributor',
-      })),
-      bots: bots.map(async (user, i) => ({
-        ...getBBox(i),
-        name: user.login,
-        avatar: await getAvatar(user.avatar_url, options),
-        url: user.html_url,
-        type: 'bot',
-      })),
-      collaborators: collaborators.map(async (user, i) => ({
-        ...getBBox(i),
-        name: user.login,
-        avatar: await getAvatar(user.avatar_url, options),
-        url: user.html_url,
-        type: 'collaborator',
-      })),
-    }
+    const deferred1 = contributors.map(async (user, i) => ({
+      ...getBBox(i),
+      name: user.login,
+      avatar: await getAvatar(user.avatar_url, options),
+      url: user.html_url,
+      type: user.type === 'Bot' ? 'bot' : 'contributor',
+    }))
+
+    const deferred2 = bots.map(async (user, i) => ({
+      ...getBBox(i),
+      name: user.login,
+      avatar: await getAvatar(user.avatar_url, options),
+      url: user.html_url,
+      type: 'bot',
+    }))
+
+    const deferred3 = collaborators.map(async (user, i) => ({
+      ...getBBox(i),
+      name: user.login,
+      avatar: await getAvatar(user.avatar_url, options),
+      url: user.html_url,
+      type: 'collaborator',
+    }))
+
+    return await Promise.all([
+      Promise.all(deferred1),
+      Promise.all(deferred2),
+      Promise.all(deferred3),
+    ]).then(([contributors, bots, collaborators]) => ({
+      contributors,
+      bots,
+      collaborators,
+    }))
   }
 }
