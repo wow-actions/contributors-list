@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import fetch from 'node-fetch'
 
 export namespace Util {
   export function getOctokit() {
@@ -62,6 +63,14 @@ export namespace Util {
     return itemHeight * Math.ceil(total / colCount)
   }
 
+  async function getAvatar(url: string, options: ReturnType<typeof getInputs>) {
+    return fetch(url).then(async (res) => {
+      const type = res.headers.get('content-type')
+      const prefix = `data:${type};base64,`
+      return res.buffer().then((buffer) => prefix + buffer.toString('base64'))
+    })
+  }
+
   export async function getUsers(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
@@ -106,40 +115,26 @@ export namespace Util {
       }
     }
 
-    const format = (user: any) => ({
-      name: user.login,
-      avatar: user.avatar_url,
-      url: user.html_url,
-    })
-
-    const res = await octokit.request(
-      'GET https://avatars0.githubusercontent.com/u/6045824?v=4',
-      {
-        headers: {
-          accept: 'application/vnd.github.v3+json',
-        },
-        mediaType: {
-          format: 'application/vnd.github.VERSION+json',
-        },
-      },
-    )
-
-    console.log(res)
-
     return {
-      contributors: contributors.map((user, i) => ({
+      contributors: contributors.map(async (user, i) => ({
         ...getBBox(i),
-        ...format(user),
+        name: user.login,
+        avatar: await getAvatar(user.avatar_url, options),
+        url: user.html_url,
         type: user.type === 'Bot' ? 'bot' : 'contributor',
       })),
-      bots: bots.map((user, i) => ({
+      bots: bots.map(async (user, i) => ({
         ...getBBox(i),
-        ...format(user),
+        name: user.login,
+        avatar: await getAvatar(user.avatar_url, options),
+        url: user.html_url,
         type: 'bot',
       })),
-      collaborators: collaborators.map((user, i) => ({
+      collaborators: collaborators.map(async (user, i) => ({
         ...getBBox(i),
-        ...format(user),
+        name: user.login,
+        avatar: await getAvatar(user.avatar_url, options),
+        url: user.html_url,
         type: 'collaborator',
       })),
     }

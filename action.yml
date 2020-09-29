@@ -35,11 +35,6 @@ inputs:
     required: false
     default: 740
 
-  toBase64:
-    description: Should convert avatar url to base64 or not.
-    required: false
-    default: true
-
   avatarSize:
     description: Size of user avatar.
     required: false

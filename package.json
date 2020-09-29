@@ -38,17 +38,15 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
-    "lodash.random": "^3.2.0",
-    "lodash.template": "^4.5.0",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@types/lodash.random": "^3.2.6",
-    "@types/lodash.template": "^4.5.0",
     "@types/mustache": "^4.0.1",
     "@types/node": "^14.0.27",
+    "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "@vercel/ncc": "^0.24.1",
