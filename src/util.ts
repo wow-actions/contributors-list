@@ -93,9 +93,12 @@ export namespace Util {
                 blend: 'dest-in',
               },
             ])
-            .flatten({ background: { r: 255, g: 255, b: 255 } })
+            .flatten({ background: { r: 255, g: 255, b: 255, alpha: 0 } })
+            .png()
             .toBuffer()
-            .then((buffer) => prefix + buffer.toString('base64'))
+            .then(
+              (buffer) => `data:image/png;base64,${buffer.toString('base64')}`,
+            )
         }
 
         return prefix + buffer.toString('base64')
