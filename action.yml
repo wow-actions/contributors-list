@@ -28,7 +28,7 @@ inputs:
   svgPath:
     description: Path to save the generated SVG.
     required: false
-    default: ./contributors.svg
+    default: contributors.svg
 
   svgWidth:
     description: Width of the generated SVG.
