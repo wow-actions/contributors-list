@@ -49,13 +49,18 @@ export namespace Action {
         ),
       })
 
-      const preContent = await Util.getFileContent(octokit, options.svgPath)
+      const preResponse = await Util.getFile(octokit, options.svgPath)
+      const preContent = preResponse
+        ? Buffer.from(preResponse.data.content, 'base64').toString()
+        : null
+
       if (preContent !== content) {
         await octokit.repos.createOrUpdateFileContents({
           ...context.repo,
           path: options.svgPath,
           content: Buffer.from(content).toString('base64'),
           message: options.commitMessage,
+          sha: preResponse ? preResponse.data.sha : undefined,
         })
 
         core.info(`Generated: "${options.svgPath}"`)

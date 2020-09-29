@@ -28,7 +28,7 @@ export namespace Util {
     }
   }
 
-  export async function getFileContent(
+  export async function getFile(
     octokit: ReturnType<typeof getOctokit>,
     path: string,
   ) {
@@ -38,8 +38,10 @@ export namespace Util {
         path,
       })
 
-      const content = response.data.content
-      return Buffer.from(content, 'base64').toString()
+      if (response.headers.status === '404') {
+        return null
+      }
+      return response
     } catch (err) {
       return null
     }
@@ -114,10 +116,10 @@ export namespace Util {
       'GET https://avatars0.githubusercontent.com/u/6045824?v=4',
       {
         headers: {
-          Accept: 'application/vnd.github.VERSION+json',
+          Accept: 'application/json',
         },
         mediaType: {
-          format: 'application/vnd.github.VERSION+json',
+          format: 'application/json',
         },
       },
     )
