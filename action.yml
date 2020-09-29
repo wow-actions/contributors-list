@@ -11,16 +11,11 @@ inputs:
     required: false
 
   sort:
-    description: Should sort the result by contributions.
+    description: Should sort contributors by contributions.
     required: false
     default: true
 
-  includeCollaborators:
-    description: Should include collaborators or not.
-    required: false
-    default: true
-
-  collaboratorType:
+  affiliation:
     description: 'Type of collaborators options: all/direct/outside.'
     required: false
     default: direct
@@ -28,22 +23,17 @@ inputs:
   includeBots:
     description: Should include bots or not.
     required: false
-    default: true
-
-  svgName:
-    description: Name of the generated SVG.
-    required: false
-    default: contributors
+    default: false
 
   svgPath:
     description: Path to save the generated SVG.
     required: false
-    default: ./
+    default: ./contributors.svg
 
   svgWidth:
     description: Width of the generated SVG.
     required: false
-    default: 768
+    default: 740
 
   toBase64:
     description: Should convert avatar url to base64 or not.
@@ -54,6 +44,46 @@ inputs:
     description: Size of user avatar.
     required: false
     default: 64
+
+  avatarMargin:
+    description: Margin of user avatar.
+    required: false
+    default: 5
+
+  userNameHeight:
+    description: Height of user name.
+    required: false
+    default: 0
+
+  svgTemplate:
+    description: Template to render SVG.
+    required: false
+    default: >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+        width="{{ width }}"
+        height="{{ contributorsHeight }}"
+      >
+        <style>.contributor-link { cursor: pointer; }</style>
+        {{ contributors }}
+      </svg>
+
+
+  itemTemplate:
+    description: Template to render user item.
+    required: false
+    default: >
+      <a xlink:href="{{ url }}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{ name }}" id="{{ name }}">
+        <image x="{{ x }}" y="{{ y }}" width="{{ width }}" height="{{ height }}" xlink:href="{{ avatar }}" />
+      </a>
+
+
+  commitMessage:
+    description: Commit message of the github action.
+    required: false
+    default: 'chore: update contributors'
 
 runs:
   using: node12

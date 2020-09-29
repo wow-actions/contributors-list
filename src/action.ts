@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import mustache from 'mustache'
 import { Util } from './util'
 
 export namespace Action {
@@ -13,11 +14,52 @@ export namespace Action {
       const repo = none.length === 2 ? none[1] : context.repo.repo
 
       core.debug(`inputs: \n ${JSON.stringify(options, null, 2)}`)
-      core.debug(`owner: ${owner}, repo: ${repo}`)
 
-      const users = Util.getUsers(octokit, owner, repo, options)
+      const users = await Util.getUsers(octokit, owner, repo, options)
 
-      core.debug(`${JSON.stringify(users, null, 2)}`)
+      core.debug(`users: \n ${JSON.stringify(users, null, 2)}`)
+
+      mustache.parse(options.itemTemplate)
+
+      const contributors = users.contributors
+        .map((user) => mustache.render(options.itemTemplate, user))
+        .join('\n')
+
+      const bots = users.bots
+        .map((user) => mustache.render(options.itemTemplate, user))
+        .join('\n')
+
+      const collaborators = users.collaborators
+        .map((user) => mustache.render(options.itemTemplate, user))
+        .join('\n')
+
+      const content = mustache.render(options.svgTemplate, {
+        contributors,
+        bots,
+        collaborators,
+        width: options.svgWidth,
+        contributorsHeight: Util.calcSectionHeight(
+          users.contributors.length,
+          options,
+        ),
+        botsHeight: Util.calcSectionHeight(users.bots.length, options),
+        collaboratorsHeight: Util.calcSectionHeight(
+          users.collaborators.length,
+          options,
+        ),
+      })
+
+      const preContent = await Util.getFileContent(octokit, options.svgPath)
+      if (preContent !== content) {
+        await octokit.repos.createOrUpdateFileContents({
+          ...context.repo,
+          path: options.svgPath,
+          content: Buffer.from(content).toString('base64'),
+          message: options.commitMessage,
+        })
+
+        core.info(`Generated: "${options.svgPath}"`)
+      }
     } catch (e) {
       core.error(e)
       core.setFailed(e.message)

@@ -11,7 +11,28 @@ jobs:
       - name: 📦　Build
         run: |
           yarn build
+
       - uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
-          repo: bubkoo/html-to-image
+          repo: antvis/g2
+          svgPath: ./examples/contributors.svg
+          includeBots: true
+
+      - uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: ./examples/contributors-with-username.svg
+          includeBots: true
+          avatarSize: 64
+          avatarMargin: 5
+          userNameHeight: 19
+          itemTemplate: >
+            <g transform="translate({{ x }}, {{ y }})">
+              <a xlink:href="{{ url }}" class="contributor-link" target="_blank" rel="nofollow sponsored" title="{{ name }}" id="{{ name }}">
+                <image width="{{ width }}" height="{{ height }}" xlink:href="{{ avatar }}" />
+                <text x="0" y="69" dy="14" font-size="14">{{ name }}</text>
+              </a>
+            </g>
+
