@@ -138,7 +138,7 @@ export namespace Util {
   }
 
   function getUserName(login: string, options: ReturnType<typeof getInputs>) {
-    return options.truncate > 0
+    return options.truncate > 0 && login.length > options.truncate
       ? `${login.substr(0, options.truncate)}...`
       : login
   }
