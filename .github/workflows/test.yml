@@ -87,8 +87,8 @@ jobs:
                 <text x="32" y="74" text-anchor="middle" alignment-baseline="middle" font-size="10">{{{ name }}}</text>
               </a>
             </g>
-
-
+            
+            
       - uses: ./
         name: contributors and bots
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -106,19 +106,19 @@ jobs:
             height="{{#sum}} {{ contributorsHeight }} +  {{ botsHeight }} + 30 + 30 {{/sum}}"
           >
             <style>.contributor-link { cursor: pointer; }</style>
-
+          
             <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
             <g transform="translate(0, 30)">
               {{{ contributors }}}
             </g>
-
+          
             <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
             <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
               {{{ bots }}}
             </g>
           </svg>
-
-
+          
+          
       - uses: ./
         name: contributors, bots and collaborators
         with:
@@ -137,20 +137,20 @@ jobs:
               height="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + {{ collaboratorsHeight }} + 30 + 30 + 30 {{/sum}}"
             >
               <style>.contributor-link { cursor: pointer; }</style>
-
+            
               <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
               <g transform="translate(0, 30)">
                 {{{ contributors }}}
               </g>
-
+            
               <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
               <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
                 {{{ bots }}}
               </g>
-
+            
               <text x="5" y="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 30 + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Collaborators</text>
               <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 30 + 30 + 30 {{/sum}})">
                 {{{ collaborators }}}
               </g>
             </svg>
-
+            
