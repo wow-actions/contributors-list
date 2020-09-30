@@ -1,5 +1,7 @@
 name: Test
+
 on: push
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -13,22 +15,63 @@ jobs:
           yarn build
 
       - uses: ./
+        name: contributors with rounded avatar
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
-          svgPath: examples/contributors-round.svg
+          svgPath: examples/contributors-rounded-avatar.svg
           round: true
           includeBots: true
 
       - uses: ./
+        name: contributors with squared avatar
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
-          svgPath: examples/contributors-square.svg
+          svgPath: examples/contributors-squared-avatar.svg
           round: false
           includeBots: true
 
       - uses: ./
+        name: bots
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: examples/bots.svg
+          svgTemplate: >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              width="{{ width }}"
+              height="{{ botsHeight }}"
+            >
+              <style>.contributor-link { cursor: pointer; }</style>
+              {{{ bots }}}
+            </svg>
+
+
+      - uses: ./
+        name: collaborators
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: examples/collaborators.svg
+          svgTemplate: >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              width="{{ width }}"
+              height="{{ collaboratorsHeight }}"
+            >
+              <style>.contributor-link { cursor: pointer; }</style>
+              {{{ collaborators }}}
+            </svg>
+
+
+      - uses: ./
+        name: contributors with username
         with:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           repo: antvis/g2
@@ -44,4 +87,70 @@ jobs:
                 <text x="32" y="74" text-anchor="middle" alignment-baseline="middle" font-size="10">{{{ name }}}</text>
               </a>
             </g>
+
+
+      - uses: ./
+        name: contributors and bots
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+        repo: antvis/g2
+        svgPath: examples/contributors-bots-collaborators.svg
+        includeBots: false
+        avatarSize: 64
+        avatarMargin: 5
+        svgTemplate: >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            version="1.1"
+            width="{{ width }}"
+            height="{{#sum}} {{ contributorsHeight }} +  {{ botsHeight }} + 30 + 30 {{/sum}}"
+          >
+            <style>.contributor-link { cursor: pointer; }</style>
+
+            <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
+            <g transform="translate(0, 30)">
+              {{{ contributors }}}
+            </g>
+
+            <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
+            <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
+              {{{ bots }}}
+            </g>
+          </svg>
+
+
+      - uses: ./
+        name: contributors, bots and collaborators
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: examples/contributors-bots-collaborators.svg
+          includeBots: false
+          avatarSize: 64
+          avatarMargin: 5
+          svgTemplate: >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              width="{{ width }}"
+              height="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + {{ collaboratorsHeight }} + 30 + 30 + 30 {{/sum}}"
+            >
+              <style>.contributor-link { cursor: pointer; }</style>
+
+              <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
+              <g transform="translate(0, 30)">
+                {{{ contributors }}}
+              </g>
+
+              <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
+              <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
+                {{{ bots }}}
+              </g>
+
+              <text x="5" y="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 30 + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Collaborators</text>
+              <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 30 + 30 + 30 {{/sum}})">
+                {{{ collaborators }}}
+              </g>
+            </svg>
 

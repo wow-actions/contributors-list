@@ -32,11 +32,7 @@ export namespace Action {
         .map((user) => mustache.render(options.itemTemplate, user))
         .join('\n')
 
-      const rendered = mustache.render(options.svgTemplate, {
-        contributors,
-        bots,
-        collaborators,
-        width: options.svgWidth,
+      const heights = {
         contributorsHeight: Util.calcSectionHeight(
           users.contributors.length,
           options,
@@ -46,6 +42,24 @@ export namespace Action {
           users.collaborators.length,
           options,
         ),
+      }
+
+      const rendered = mustache.render(options.svgTemplate, {
+        contributors,
+        bots,
+        collaborators,
+        width: options.svgWidth,
+        ...heights,
+        sum() {
+          return (text: string, render: (raw: string) => string) => {
+            const sub = mustache.render(text, heights)
+            try {
+              return render(`${eval(sub)}`) // tslint:disable-line
+            } catch (error) {
+              return render(sub)
+            }
+          }
+        },
       })
 
       const content = minify(rendered)
