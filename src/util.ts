@@ -39,16 +39,25 @@ export namespace Util {
     path: string,
   ) {
     try {
-      const response = await octokit.repos.getContent({
-        ...github.context.repo,
-        path,
+      const context = github.context
+
+      const res = await octokit.git.getTree({
+        ...context.repo,
+        tree_sha: context.sha,
       })
+
+      console.log(res.data)
+
+      const response = await octokit.request(
+        'GET /repos/:owner/:repo/git/blobs/:file_sha',
+        {
+          ...context.repo,
+          file_sha: context.sha,
+        },
+      )
 
       console.log(response)
 
-      if (response.headers.status === '404') {
-        return null
-      }
       return response
     } catch (e) {
       core.error(e)
