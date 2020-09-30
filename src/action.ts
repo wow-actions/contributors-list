@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { minify } from 'html-minifier'
 import mustache from 'mustache'
 import { Util } from './util'
 
@@ -17,8 +18,6 @@ export namespace Action {
 
       const users = await Util.getUsers(octokit, owner, repo, options)
 
-      // core.debug(`${JSON.stringify(users, null, 2)}`)
-
       mustache.parse(options.itemTemplate)
 
       const contributors = users.contributors
@@ -33,7 +32,7 @@ export namespace Action {
         .map((user) => mustache.render(options.itemTemplate, user))
         .join('\n')
 
-      const content = mustache.render(options.svgTemplate, {
+      const rendered = mustache.render(options.svgTemplate, {
         contributors,
         bots,
         collaborators,
@@ -49,10 +48,15 @@ export namespace Action {
         ),
       })
 
+      const content = minify(rendered)
+
       const preResponse = await Util.getFileContent(octokit, options.svgPath)
       const preContent = preResponse
         ? Buffer.from(preResponse.data.content, 'base64').toString()
         : null
+
+      console.log(options.svgPath)
+      console.log(preResponse ? preResponse.data : 'null')
 
       if (preContent !== content) {
         await octokit.repos.createOrUpdateFileContents({
