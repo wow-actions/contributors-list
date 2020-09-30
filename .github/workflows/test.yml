@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 🚧　Install
+      - name: Install
         run: |
           yarn
-      - name: 📦　Build
+      - name: Build
         run: |
           yarn build
 

@@ -44,11 +44,14 @@ export namespace Util {
         path,
       })
 
+      console.log(response)
+
       if (response.headers.status === '404') {
         return null
       }
       return response
-    } catch (err) {
+    } catch (e) {
+      core.error(e)
       return null
     }
   }
