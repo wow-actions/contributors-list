@@ -1,4 +1,4 @@
-name: Test
+name: Contributors
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  test:
+  contributors:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

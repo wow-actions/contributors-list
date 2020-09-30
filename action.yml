@@ -1,5 +1,5 @@
 name: Contributors List
-description: Give a welcome comment on first issue or PR 💖.
+description: Automate generate 'contributors.svg' for your repository.
 author: bubkoo <bubkoo.wy@gmail.com>
 inputs:
   GITHUB_TOKEN:
@@ -11,17 +11,17 @@ inputs:
     required: false
 
   sort:
-    description: Should sort contributors by contributions.
+    description: Specify if sort contributors by contributions or not. Default `true`.
     required: false
     default: true
 
   round:
-    description: Should clip the avatar to rounded.
+    description: Specify if clip the avatar to rounded or not. Default `true`.
     required: false
     default: true
 
   truncate:
-    description: Truncate user name by specified length, `0` for no truncate.
+    description: Truncate username by specified length, `0` for no truncate.
     required: false
     default: 12
 

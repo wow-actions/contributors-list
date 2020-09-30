@@ -8,8 +8,6 @@ export namespace Action {
   export async function run() {
     try {
       const context = github.context
-
-      console.log(context)
       const octokit = Util.getOctokit()
       const options = Util.getInputs()
       const none = options.repo.split('/')
