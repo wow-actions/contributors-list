@@ -46,30 +46,18 @@ export namespace Util {
         recursive: 'true',
       })
 
-      // const parts = path.split('/')
-      // const findFileSha = (tree: typeof data.tree, name: string) => {
-      //   const found = tree.find((item) => item.path === name)
-      //   return found ? found.sha : null
-      // }
+      const found = data.tree.find((item) => item.path === path)
+      if (found) {
+        return await octokit.request(
+          'GET /repos/:owner/:repo/git/blobs/:file_sha',
+          {
+            ...context.repo,
+            file_sha: found.sha,
+          },
+        )
+      }
 
-      // let fileSha: string
-      // path.split('/').forEach((name) => {
-
-      // })
-
-      console.log(data)
-
-      const response = await octokit.request(
-        'GET /repos/:owner/:repo/git/blobs/:file_sha',
-        {
-          ...context.repo,
-          file_sha: context.sha,
-        },
-      )
-
-      console.log(response)
-
-      return response
+      return null
     } catch (e) {
       core.error(e)
       return null

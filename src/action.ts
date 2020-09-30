@@ -50,13 +50,10 @@ export namespace Action {
 
       const content = minify(rendered)
 
-      const preResponse = await Util.getFileContent(octokit, options.svgPath)
+      const preResponse = await Util.getLargeFile(octokit, options.svgPath)
       const preContent = preResponse
         ? Buffer.from(preResponse.data.content, 'base64').toString()
         : null
-
-      console.log(options.svgPath)
-      console.log(preResponse ? preResponse.data : 'null')
 
       if (preContent !== content) {
         await octokit.repos.createOrUpdateFileContents({
