@@ -91,32 +91,33 @@ jobs:
             
       - uses: ./
         name: contributors and bots
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-        repo: antvis/g2
-        svgPath: examples/contributors-bots-collaborators.svg
-        includeBots: false
-        avatarSize: 64
-        avatarMargin: 5
-        svgTemplate: >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            width="{{ width }}"
-            height="{{#sum}} {{ contributorsHeight }} +  {{ botsHeight }} + 30 + 30 {{/sum}}"
-          >
-            <style>.contributor-link { cursor: pointer; }</style>
-          
-            <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
-            <g transform="translate(0, 30)">
-              {{{ contributors }}}
-            </g>
-          
-            <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
-            <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
-              {{{ bots }}}
-            </g>
-          </svg>
+        with:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          repo: antvis/g2
+          svgPath: examples/contributors-bots-collaborators.svg
+          includeBots: false
+          avatarSize: 64
+          avatarMargin: 5
+          svgTemplate: >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              width="{{ width }}"
+              height="{{#sum}} {{ contributorsHeight }} +  {{ botsHeight }} + 30 + 30 {{/sum}}"
+            >
+              <style>.contributor-link { cursor: pointer; }</style>
+
+              <text x="5" y="5" text-anchor="start" alignment-baseline="middle" font-size="24">Contributors</text>
+              <g transform="translate(0, 30)">
+                {{{ contributors }}}
+              </g>
+
+              <text x="5" y="{{#sum}} {{ contributorsHeight }} + 30 + 5 {{/sum}}" text-anchor="start" alignment-baseline="middle" font-size="24">Bots</text>
+              <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 30 + 30 {{/sum}})">
+                {{{ bots }}}
+              </g>
+            </svg>
           
           
       - uses: ./
