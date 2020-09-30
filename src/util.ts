@@ -40,13 +40,24 @@ export namespace Util {
   ) {
     try {
       const context = github.context
-
-      const res = await octokit.git.getTree({
+      const { data } = await octokit.git.getTree({
         ...context.repo,
         tree_sha: context.sha,
+        recursive: 'true',
       })
 
-      console.log(res.data)
+      // const parts = path.split('/')
+      // const findFileSha = (tree: typeof data.tree, name: string) => {
+      //   const found = tree.find((item) => item.path === name)
+      //   return found ? found.sha : null
+      // }
+
+      // let fileSha: string
+      // path.split('/').forEach((name) => {
+
+      // })
+
+      console.log(data)
 
       const response = await octokit.request(
         'GET /repos/:owner/:repo/git/blobs/:file_sha',
