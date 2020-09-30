@@ -34,7 +34,7 @@ export namespace Util {
     }
   }
 
-  export async function getFileContent(
+  export async function getLargeFile(
     octokit: ReturnType<typeof getOctokit>,
     path: string,
   ) {
