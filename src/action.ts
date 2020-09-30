@@ -7,9 +7,11 @@ import { Util } from './util'
 export namespace Action {
   export async function run() {
     try {
+      const context = github.context
+
+      console.log(context)
       const octokit = Util.getOctokit()
       const options = Util.getInputs()
-      const context = github.context
       const none = options.repo.split('/')
       const owner = none.length === 2 ? none[0] : context.repo.owner
       const repo = none.length === 2 ? none[1] : context.repo.repo
