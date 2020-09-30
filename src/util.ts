@@ -11,6 +11,7 @@ export namespace Util {
   }
 
   export function getInputs() {
+    const truncate = parseInt(core.getInput('truncate'), 10)
     const svgWidth = parseInt(core.getInput('svgWidth'), 10)
     const avatarSize = parseInt(core.getInput('avatarSize'), 10)
     const avatarMargin = parseInt(core.getInput('avatarMargin'), 10)
@@ -25,6 +26,7 @@ export namespace Util {
       svgTemplate: core.getInput('svgTemplate'),
       itemTemplate: core.getInput('itemTemplate'),
       commitMessage: core.getInput('commitMessage'),
+      truncate: isNaN(truncate) ? 0 : truncate,
       svgWidth: isNaN(svgWidth) ? 740 : svgWidth,
       avatarSize: isNaN(avatarSize) ? 64 : avatarSize,
       avatarMargin: isNaN(avatarMargin) ? 5 : avatarMargin,
@@ -124,6 +126,12 @@ export namespace Util {
     }
   }
 
+  function getUserName(login: string, options: ReturnType<typeof getInputs>) {
+    return options.truncate > 0
+      ? `${login.substr(0, options.truncate)}...`
+      : login
+  }
+
   export async function getUsers(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
@@ -153,7 +161,7 @@ export namespace Util {
 
     const deferred1 = contributors.map(async (user, i) => ({
       ...getItemBBox(i, options),
-      name: user.login,
+      name: getUserName(user.login, options),
       avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: user.type === 'Bot' ? 'bot' : 'contributor',
@@ -161,7 +169,7 @@ export namespace Util {
 
     const deferred2 = bots.map(async (user, i) => ({
       ...getItemBBox(i, options),
-      name: user.login,
+      name: getUserName(user.login, options),
       avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: 'bot',
@@ -169,7 +177,7 @@ export namespace Util {
 
     const deferred3 = collaborators.map(async (user, i) => ({
       ...getItemBBox(i, options),
-      name: user.login,
+      name: getUserName(user.login, options),
       avatar: await fetchAvatar(user.avatar_url, options),
       url: user.html_url,
       type: 'collaborator',
