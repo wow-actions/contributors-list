@@ -2,7 +2,7 @@ name: Contributors
 
 on:
   schedule:
-    - cron: '20 20 * * *'
+    - cron: '0 0 * * *'
   push:
     branches:
       - master
