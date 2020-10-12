@@ -38,30 +38,25 @@ export namespace Util {
     octokit: ReturnType<typeof getOctokit>,
     path: string,
   ) {
-    try {
-      const context = github.context
-      const { data } = await octokit.git.getTree({
-        ...context.repo,
-        tree_sha: context.sha,
-        recursive: 'true',
-      })
+    const context = github.context
+    const { data } = await octokit.git.getTree({
+      ...context.repo,
+      tree_sha: context.sha,
+      recursive: 'true',
+    })
 
-      const found = data.tree.find((item) => item.path === path)
-      if (found) {
-        return await octokit.request(
-          'GET /repos/:owner/:repo/git/blobs/:file_sha',
-          {
-            ...context.repo,
-            file_sha: found.sha,
-          },
-        )
-      }
-
-      return null
-    } catch (e) {
-      core.error(e)
-      return null
+    const found = data.tree.find((item) => item.path === path)
+    if (found) {
+      return await octokit.request(
+        'GET /repos/:owner/:repo/git/blobs/:file_sha',
+        {
+          ...context.repo,
+          file_sha: found.sha,
+        },
+      )
     }
+
+    return null
   }
 
   export function calcSectionHeight(
