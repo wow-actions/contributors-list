@@ -64,6 +64,8 @@ export namespace Action {
 
       const content = minify(rendered)
 
+      core.debug(`content: \n${content}`)
+
       const preResponse = await Util.getLargeFile(octokit, options.svgPath)
       const preContent = preResponse
         ? Buffer.from(preResponse.data.content, 'base64').toString()
