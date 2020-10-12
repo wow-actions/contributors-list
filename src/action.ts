@@ -10,12 +10,14 @@ export namespace Action {
       const context = github.context
       const octokit = Util.getOctokit()
       const options = Util.getInputs()
-      const none = options.repo.split('/')
-      const owner = none.length === 2 ? none[0] : context.repo.owner
-      const repo = none.length === 2 ? none[1] : context.repo.repo
-      const users = await Util.getUsers(octokit, owner, repo, options)
 
       core.debug(`inputs: \n ${JSON.stringify(options, null, 2)}`)
+
+      const parts = options.repo.split('/')
+      const owner = parts.length === 2 ? parts[0] : context.repo.owner
+      const repo = parts.length === 2 ? parts[1] : context.repo.repo
+      const users = await Util.getUsers(octokit, owner, repo, options)
+
       core.debug(JSON.stringify(users, null, 2))
 
       mustache.parse(options.itemTemplate)

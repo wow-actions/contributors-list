@@ -17,7 +17,7 @@ export namespace Util {
     const avatarMargin = parseInt(core.getInput('avatarMargin'), 10)
     const userNameHeight = parseInt(core.getInput('userNameHeight'), 10)
     return {
-      repo: core.getInput('repo') || '/',
+      repo: core.getInput('repo') || '',
       sort: core.getInput('sort') === 'true',
       round: core.getInput('round') !== 'false',
       includeBots: core.getInput('includeBots') === 'true',
