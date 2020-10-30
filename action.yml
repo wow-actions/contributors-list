@@ -88,7 +88,7 @@ inputs:
   commitMessage:
     description: Commit message of the github action.
     required: false
-    default: 'chore: update contributors'
+    default: 'chore: update contributors [skip ci]'
 
 runs:
   using: node12
