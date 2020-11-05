@@ -21,7 +21,7 @@ jobs:
       - uses: bubkoo/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          svgPath: contributors.svg
+          svgPath: CONTRIBUTORS.svg
 ```
 
 ### Parameters
@@ -34,7 +34,7 @@ jobs:
   - `'direct'`: All collaborators with permissions to an organization-owned repository, regardless of organization membership status.
   - `'all'`: All collaborators the authenticated user can see.
 - `includeBots`: Specify if include bots in the contributors list or not. Default `true`.
-- `svgPath`: The path to save generated SVG. Default `'contributors.svg'`.
+- `svgPath`: The path to save generated SVG. Default `'CONTRIBUTORS.svg'`.
 - `svgWidth`: Width of the generated SVG. Default: `740`.
 - `avatarSize`: Size of user avatar. Default: `64`.
 - `avatarMargin`: Margin of user avatar. Default: `5`.
