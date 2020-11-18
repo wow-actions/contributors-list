@@ -155,6 +155,11 @@ export namespace Util {
       affiliation: options.affiliation,
     })
 
+    const excludeUsers = (core.getInput('excludeUsers') || '')
+      .split(/\s+/)
+      .map((user) => user.trim())
+      .filter((user) => user.length > 0)
+
     const contributors = options.includeBots
       ? contributorsRes.data
       : contributorsRes.data.filter((el) => el.type !== 'Bot')
@@ -165,29 +170,35 @@ export namespace Util {
       bots.sort((a, b) => b.contributions - a.contributions)
     }
 
-    const deferred1 = contributors.map(async (user, i) => ({
-      ...getItemBBox(i, options),
-      name: getUserName(user.login, options),
-      avatar: await fetchAvatar(user.avatar_url, options),
-      url: user.html_url,
-      type: user.type === 'Bot' ? 'bot' : 'contributor',
-    }))
+    const deferred1 = contributors
+      .filter((user) => !excludeUsers.includes(user.login))
+      .map(async (user, i) => ({
+        ...getItemBBox(i, options),
+        name: getUserName(user.login, options),
+        avatar: await fetchAvatar(user.avatar_url, options),
+        url: user.html_url,
+        type: user.type === 'Bot' ? 'bot' : 'contributor',
+      }))
 
-    const deferred2 = bots.map(async (user, i) => ({
-      ...getItemBBox(i, options),
-      name: getUserName(user.login, options),
-      avatar: await fetchAvatar(user.avatar_url, options),
-      url: user.html_url,
-      type: 'bot',
-    }))
+    const deferred2 = bots
+      .filter((user) => !excludeUsers.includes(user.login))
+      .map(async (user, i) => ({
+        ...getItemBBox(i, options),
+        name: getUserName(user.login, options),
+        avatar: await fetchAvatar(user.avatar_url, options),
+        url: user.html_url,
+        type: 'bot',
+      }))
 
-    const deferred3 = collaborators.map(async (user, i) => ({
-      ...getItemBBox(i, options),
-      name: getUserName(user.login, options),
-      avatar: await fetchAvatar(user.avatar_url, options),
-      url: user.html_url,
-      type: 'collaborator',
-    }))
+    const deferred3 = collaborators
+      .filter((user) => !excludeUsers.includes(user.login))
+      .map(async (user, i) => ({
+        ...getItemBBox(i, options),
+        name: getUserName(user.login, options),
+        avatar: await fetchAvatar(user.avatar_url, options),
+        url: user.html_url,
+        type: 'collaborator',
+      }))
 
     return await Promise.all([
       Promise.all(deferred1),

@@ -35,6 +35,10 @@ inputs:
     required: false
     default: false
 
+  excludeUsers:
+    description: Users to exclude.
+    required: false
+
   svgPath:
     description: Path to save the generated SVG.
     required: false
