@@ -138,24 +138,84 @@ export namespace Util {
       : login
   }
 
+  async function getAllContributors(
+    octokit: ReturnType<typeof github.getOctokit>,
+    owner: string,
+    repo: string,
+  ) {
+    const fetch = (page?: number) =>
+      octokit.repos.listContributors({
+        owner,
+        repo,
+        page,
+        per_page: 100,
+      })
+
+    const res = await fetch()
+    const users = res.data || []
+    const link = res.headers.link
+    const matches = link ? link.match(/[&|?]page=\d+/gim) : null
+    if (matches) {
+      const nums = matches.map((item) => parseInt(item.split('=')[1], 10))
+      const min = Math.min(...nums)
+      const max = Math.max(...nums)
+      for (let i = min; i <= max; i += 1) {
+        const { data } = await fetch(i)
+        if (data) {
+          users.push(...data)
+        }
+      }
+    }
+
+    return users
+  }
+
+  async function getAllCollaborators(
+    octokit: ReturnType<typeof github.getOctokit>,
+    owner: string,
+    repo: string,
+    affiliation: 'all' | 'direct' | 'outside',
+  ) {
+    const fetch = (page?: number) =>
+      octokit.repos.listCollaborators({
+        owner,
+        repo,
+        page,
+        affiliation,
+        per_page: 100,
+      })
+    const res = await fetch()
+    const users = res.data || []
+    const link = res.headers.link
+    const matches = link ? link.match(/[&|?]page=\d+/gim) : null
+    if (matches) {
+      const nums = matches.map((item) => parseInt(item.split('=')[1], 10))
+      const min = Math.min(...nums)
+      const max = Math.max(...nums)
+      for (let i = min; i <= max; i += 1) {
+        const { data } = await fetch(i)
+        if (data) {
+          users.push(...data)
+        }
+      }
+    }
+
+    return users
+  }
+
   export async function getUsers(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
     repo: string,
     options: ReturnType<typeof getInputs>,
   ) {
-    const contributorsRes = await octokit.repos.listContributors({
+    const allContributors = await getAllContributors(octokit, owner, repo)
+    const collaborators = await getAllCollaborators(
+      octokit,
       owner,
       repo,
-      per_page: 100,
-    })
-
-    const { data: collaborators } = await octokit.repos.listCollaborators({
-      owner,
-      repo,
-      affiliation: options.affiliation,
-      per_page: 100,
-    })
+      options.affiliation,
+    )
 
     const excludeUsers = (core.getInput('excludeUsers') || '')
       .split(/\s+/)
@@ -163,9 +223,9 @@ export namespace Util {
       .filter((user) => user.length > 0)
 
     const contributors = options.includeBots
-      ? contributorsRes.data
-      : contributorsRes.data.filter((el) => el.type !== 'Bot')
-    const bots = contributorsRes.data.filter((el) => el.type === 'Bot')
+      ? allContributors
+      : allContributors.filter((el) => el.type !== 'Bot')
+    const bots = allContributors.filter((el) => el.type === 'Bot')
 
     if (options.sort) {
       contributors.sort((a, b) => b.contributions - a.contributions)
