@@ -18,7 +18,25 @@ export namespace Action {
       const repo = parts.length === 2 ? parts[1] : context.repo.repo
       const users = await Util.getUsers(octokit, owner, repo, options)
 
-      core.debug(JSON.stringify(users, null, 2))
+      core.info(
+        `contributors: ${users.contributors.length}, ${JSON.stringify(
+          users.contributors,
+          null,
+          2,
+        )}`,
+      )
+
+      core.info(
+        `collaborators: ${users.collaborators.length}, ${JSON.stringify(
+          users.collaborators,
+          null,
+          2,
+        )}`,
+      )
+
+      core.info(
+        `bots: ${users.bots.length}, ${JSON.stringify(users.bots, null, 2)}`,
+      )
 
       mustache.parse(options.itemTemplate)
 
