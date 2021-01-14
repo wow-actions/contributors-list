@@ -147,12 +147,14 @@ export namespace Util {
     const contributorsRes = await octokit.repos.listContributors({
       owner,
       repo,
+      per_page: 100,
     })
 
     const { data: collaborators } = await octokit.repos.listCollaborators({
       owner,
       repo,
       affiliation: options.affiliation,
+      per_page: 100,
     })
 
     const excludeUsers = (core.getInput('excludeUsers') || '')

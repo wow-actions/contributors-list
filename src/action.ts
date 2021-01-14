@@ -20,7 +20,7 @@ export namespace Action {
 
       core.info(
         `contributors: ${users.contributors.length}, ${JSON.stringify(
-          users.contributors,
+          users.contributors.map((i) => i.name),
           null,
           2,
         )}`,
@@ -28,14 +28,18 @@ export namespace Action {
 
       core.info(
         `collaborators: ${users.collaborators.length}, ${JSON.stringify(
-          users.collaborators,
+          users.collaborators.map((i) => i.name),
           null,
           2,
         )}`,
       )
 
       core.info(
-        `bots: ${users.bots.length}, ${JSON.stringify(users.bots, null, 2)}`,
+        `bots: ${users.bots.length}, ${JSON.stringify(
+          users.bots.map((i) => i.name),
+          null,
+          2,
+        )}`,
       )
 
       mustache.parse(options.itemTemplate)
