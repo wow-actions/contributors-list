@@ -28,6 +28,7 @@ jobs:
 
 - `sort`: Specify if sort contributors by contributions or not. Default: `true`.
 - `round`: Specify if clip the avatar to rounded or not. Default: `true`.
+- `count`: Specify the max count of contributors listed. Default list all contributors.
 - `truncate`: Truncate username by specified length, `0` for no truncate. Default: `12`.
 - `affiliation`: Specify the type of collaborators. Default: `direct`. Options: `all/direct/outside`.
   - `'outside'`: All outside collaborators of an organization-owned repository.

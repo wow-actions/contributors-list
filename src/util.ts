@@ -11,6 +11,7 @@ export namespace Util {
   }
 
   export function getInputs() {
+    const count = parseInt(core.getInput('count'), 10)
     const truncate = parseInt(core.getInput('truncate'), 10)
     const svgWidth = parseInt(core.getInput('svgWidth'), 10)
     const avatarSize = parseInt(core.getInput('avatarSize'), 10)
@@ -19,6 +20,7 @@ export namespace Util {
     return {
       repo: core.getInput('repo') || '',
       sort: core.getInput('sort') === 'true',
+      count: isNaN(count) ? null : count,
       round: core.getInput('round') !== 'false',
       includeBots: core.getInput('includeBots') === 'true',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
@@ -266,10 +268,18 @@ export namespace Util {
       Promise.all(deferred1),
       Promise.all(deferred2),
       Promise.all(deferred3),
-    ]).then(([contributors, bots, collaborators]) => ({
-      contributors,
-      bots,
-      collaborators,
-    }))
+    ]).then(([contributors, bots, collaborators]) =>
+      options.count
+        ? {
+            contributors: contributors.slice(0, options.count),
+            bots: bots.slice(0, options.count),
+            collaborators: collaborators.slice(0, options.count),
+          }
+        : {
+            contributors,
+            bots,
+            collaborators,
+          },
+    )
   }
 }

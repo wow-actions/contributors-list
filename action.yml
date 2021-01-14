@@ -15,6 +15,10 @@ inputs:
     required: false
     default: true
 
+  count:
+    description: Specify the max count of contributors listed. Default list all contributors.
+    required: false
+
   round:
     description: Specify if clip the avatar to rounded or not. Default `true`.
     required: false
