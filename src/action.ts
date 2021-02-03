@@ -92,10 +92,11 @@ export namespace Action {
       core.debug(`content: \n${content}`)
 
       let preContent
+      let preResponse
       if (options.noCommit) {
         preContent = await fs.readFileSync(options.svgPath, 'utf-8')
       } else {
-        const preResponse = await Util.getLargeFile(octokit, options.svgPath)
+        preResponse = await Util.getLargeFile(octokit, options.svgPath)
         preContent = preResponse
           ? Buffer.from(preResponse.data.content, 'base64').toString()
           : null
