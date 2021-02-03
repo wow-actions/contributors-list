@@ -98,6 +98,11 @@ inputs:
     required: false
     default: 'chore: update contributors [skip ci]'
 
+  noCommit:
+    description: Changes will not be committed. This options requires a local clone and will updated if required the contributor svg.
+    required: false
+    default: false
+
 runs:
   using: node12
   main: dist/index.js

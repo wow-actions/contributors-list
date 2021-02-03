@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 import { minify } from 'html-minifier'
 import mustache from 'mustache'
 import { Util } from './util'
+import * as fs from 'fs'
 
 export namespace Action {
   export async function run() {
@@ -90,21 +91,30 @@ export namespace Action {
 
       core.debug(`content: \n${content}`)
 
-      const preResponse = await Util.getLargeFile(octokit, options.svgPath)
-      const preContent = preResponse
-        ? Buffer.from(preResponse.data.content, 'base64').toString()
-        : null
+      let preContent
+      if (options.noCommit) {
+        preContent = await fs.readFileSync(options.svgPath, 'utf-8')
+      } else {
+        const preResponse = await Util.getLargeFile(octokit, options.svgPath)
+        preContent = preResponse
+          ? Buffer.from(preResponse.data.content, 'base64').toString()
+          : null
+      }
 
       if (preContent !== content) {
-        await octokit.repos.createOrUpdateFileContents({
-          ...context.repo,
-          path: options.svgPath,
-          content: Buffer.from(content).toString('base64'),
-          message: options.commitMessage,
-          sha: preResponse ? preResponse.data.sha : undefined,
-        })
+        options.noCommit
+          ? fs.writeFileSync(options.svgPath, Buffer.from(content), 'utf-8')
+          : await octokit.repos.createOrUpdateFileContents({
+              ...context.repo,
+              path: options.svgPath,
+              content: Buffer.from(content).toString('base64'),
+              message: options.commitMessage,
+              sha: preResponse ? preResponse.data.sha : undefined,
+            })
 
         core.info(`Generated: "${options.svgPath}"`)
+      } else {
+        core.debug('No updated required, content not changed.')
       }
     } catch (e) {
       core.error(e)

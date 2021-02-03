@@ -11,7 +11,8 @@
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "ncc build src/index.ts --minify --v8-cache",
     "prebuild": "run-s lint clean",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "watch": "ts-node-dev --respawn --exit-child src/index.ts"
   },
   "husky": {
     "hooks": {
@@ -62,6 +63,7 @@
     "prettier": "^2.1.2",
     "pretty-quick": "^3.0.2",
     "rimraf": "^3.0.2",
+    "ts-node-dev": "^1.1.1",
     "tslint": "^6.1.3",
     "tslint-config-airbnb": "^5.11.2",
     "tslint-config-prettier": "^1.18.0",
