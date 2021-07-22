@@ -27,6 +27,7 @@ export namespace Util {
       svgPath: core.getInput('svgPath') || './contributors.svg',
       svgTemplate: core.getInput('svgTemplate'),
       itemTemplate: core.getInput('itemTemplate'),
+      noCommit: core.getInput('noCommit') === 'true',
       commitMessage: core.getInput('commitMessage'),
       truncate: isNaN(truncate) ? 0 : truncate,
       svgWidth: isNaN(svgWidth) ? 740 : svgWidth,

@@ -78,7 +78,7 @@ jobs:
   </a>
   ```
 - `commitMessage`: Commit message of the github action. Default: `'chore: update contributors'`
-
+- `noCommit`: Changes will not be committed. This options requires a local clone and will updated if required the contributor svg. Default: `false`.
 ## Examples
 
 ### Rounded Avatar
