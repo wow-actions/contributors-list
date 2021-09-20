@@ -1,6 +1,6 @@
 # Contributors List
 
-Automatically generate `'contributors.svg'`.
+Automatically generate `contributors.svg` for your repository.
 
 ## Usage
 
