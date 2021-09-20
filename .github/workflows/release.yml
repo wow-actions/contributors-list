@@ -3,11 +3,41 @@ on:
   push:
     branches:
       - master
+      - next
+      - next-major
+      - alpha
+      - beta
 jobs:
-  release:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: bubkoo/release-github-action@v1
+      - name: ⤵️　Checkout
+        uses: actions/checkout@v2
+
+      - name: 🚧　Install
+        run: yarn install
+
+      - name: 📦　Build
+        run: yarn build
+
+      - name: 🔑　Generate Token
+        uses: wow-actions/use-app-token@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          env_name: bot_token
+
+      - name: 📦　Semantic Release
+        uses: cycjimmy/semantic-release-action@v2
+        id: semantic
+        with:
+          extends: '@wow-actions/semantic-release-config'
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ env.bot_token }}
+          GIT_AUTHOR_NAME: wow-actions-bot
+          GIT_AUTHOR_EMAIL: wow-actions-bot@users.noreply.github.com
+          GIT_COMMITTER_NAME: wow-actions-bot
+          GIT_COMMITTER_EMAIL: wow-actions-bot@users.noreply.github.com
