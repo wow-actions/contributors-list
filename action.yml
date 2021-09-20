@@ -1,5 +1,5 @@
 name: Contributors List
-description: Automate generate 'contributors.svg' for your repository.
+description: Automatically generate contributors.svg
 author: bubkoo <bubkoo.wy@gmail.com>
 inputs:
   GITHUB_TOKEN:

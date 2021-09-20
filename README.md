@@ -1,6 +1,6 @@
 # Contributors List
 
-> A GitHub Action to automate generate contributors.svg
+Automatically generate `'contributors.svg'`.
 
 ## Usage
 
@@ -18,13 +18,17 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           svgPath: CONTRIBUTORS.svg
 ```
 
-### Parameters
+### Inputs
+
+Various inputs are defined to let you configure the action:
+
+> Note: [Workflow command and parameter names are not case-sensitive](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#about-workflow-commands).
 
 - `sort`: Specify if sort contributors by contributions or not. Default: `true`.
 - `round`: Specify if clip the avatar to rounded or not. Default: `true`.
@@ -79,6 +83,7 @@ jobs:
   ```
 - `commitMessage`: Commit message of the github action. Default: `'chore: update contributors'`
 - `noCommit`: Changes will not be committed. This options requires a local clone and will updated if required the contributor svg. Default: `false`.
+
 ## Examples
 
 ### Rounded Avatar
@@ -95,7 +100,7 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           round: true
@@ -117,7 +122,7 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           round: false
@@ -139,7 +144,7 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           userNameHeight: 19
@@ -168,7 +173,7 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           svgTemplate: >
@@ -200,7 +205,7 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           svgTemplate: >
@@ -232,11 +237,11 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           includeBots: false
-          svgTemplate: >
+          svgTemplate: |
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -245,12 +250,12 @@ jobs:
               height="{{#sum}} {{ contributorsHeight }} +  {{ botsHeight }} + 32 + 32 {{/sum}}"
             >
               <style>.contributor-link { cursor: pointer; }</style>
-            
+
               <text x="5" y="8" text-anchor="start" alignment-baseline="before-edge" font-size="24">Contributors</text>
               <g transform="translate(0, 32)">
                 {{{ contributors }}}
               </g>
-            
+
               <text x="5" y="{{#sum}} {{ contributorsHeight }} + 32 + 8 {{/sum}}" text-anchor="start" alignment-baseline="before-edge" font-size="24">Bots</text>
               <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 32 + 32 {{/sum}})">
                 {{{ bots }}}
@@ -274,11 +279,11 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/contributors-list@v1
+      - uses: wow-actions/contributors-list@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           includeBots: false
-          svgTemplate: >
+          svgTemplate: |
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -287,17 +292,17 @@ jobs:
               height="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + {{ collaboratorsHeight }} + 32 + 32 + 32 {{/sum}}"
             >
               <style>.contributor-link { cursor: pointer; }</style>
-            
+
               <text x="5" y="5" text-anchor="start" alignment-baseline="before-edge" font-size="24">Contributors</text>
               <g transform="translate(0, 32)">
                 {{{ contributors }}}
               </g>
-            
+
               <text x="5" y="{{#sum}} {{ contributorsHeight }} + 32 + 8 {{/sum}}" text-anchor="start" alignment-baseline="before-edge" font-size="24">Bots</text>
               <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + 32 + 32 {{/sum}})">
                 {{{ bots }}}
               </g>
-            
+
               <text x="5" y="{{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 32 + 32 + 8 {{/sum}}" text-anchor="start" alignment-baseline="before-edge" font-size="24">Collaborators</text>
               <g transform="translate(0, {{#sum}} {{ contributorsHeight }} + {{ botsHeight }} + 32 + 32 + 32 {{/sum}})">
                 {{{ collaborators }}}
