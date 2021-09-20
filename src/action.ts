@@ -2,13 +2,13 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { minify } from 'html-minifier'
 import mustache from 'mustache'
-import { Util } from './util'
 import * as fs from 'fs'
+import { Util } from './util'
 
 export namespace Action {
   export async function run() {
     try {
-      const context = github.context
+      const { context } = github
       const octokit = Util.getOctokit()
       const options = Util.getInputs()
 
@@ -79,7 +79,8 @@ export namespace Action {
           return (text: string, render: (raw: string) => string) => {
             const sub = mustache.render(text, heights)
             try {
-              return render(`${eval(sub)}`) // tslint:disable-line
+              // eslint-disable-next-line no-eval
+              return render(`${eval(sub)}`)
             } catch (error) {
               return render(sub)
             }
@@ -94,7 +95,7 @@ export namespace Action {
       let preContent
       let preResponse
       if (options.noCommit) {
-        preContent = await fs.readFileSync(options.svgPath, 'utf-8')
+        preContent = fs.readFileSync(options.svgPath, 'utf-8')
       } else {
         preResponse = await Util.getLargeFile(octokit, options.svgPath)
         preContent = preResponse
@@ -103,9 +104,10 @@ export namespace Action {
       }
 
       if (preContent !== content) {
+        // eslint-disable-next-line no-unused-expressions
         options.noCommit
           ? fs.writeFileSync(options.svgPath, Buffer.from(content), 'utf-8')
-          : await octokit.repos.createOrUpdateFileContents({
+          : await octokit.rest.repos.createOrUpdateFileContents({
               ...context.repo,
               path: options.svgPath,
               content: Buffer.from(content).toString('base64'),
@@ -118,8 +120,7 @@ export namespace Action {
         core.debug('No updated required, content not changed.')
       }
     } catch (e) {
-      core.error(e)
-      core.setFailed(e.message)
+      core.setFailed(e)
     }
   }
 }

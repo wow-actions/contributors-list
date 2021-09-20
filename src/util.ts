@@ -20,7 +20,7 @@ export namespace Util {
     return {
       repo: core.getInput('repo') || '',
       sort: core.getInput('sort') === 'true',
-      count: isNaN(count) ? null : count,
+      count: Number.isNaN(count) ? null : count,
       round: core.getInput('round') !== 'false',
       includeBots: core.getInput('includeBots') === 'true',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
@@ -29,11 +29,11 @@ export namespace Util {
       itemTemplate: core.getInput('itemTemplate'),
       noCommit: core.getInput('noCommit') === 'true',
       commitMessage: core.getInput('commitMessage'),
-      truncate: isNaN(truncate) ? 0 : truncate,
-      svgWidth: isNaN(svgWidth) ? 740 : svgWidth,
-      avatarSize: isNaN(avatarSize) ? 64 : avatarSize,
-      avatarMargin: isNaN(avatarMargin) ? 5 : avatarMargin,
-      userNameHeight: isNaN(userNameHeight) ? 0 : userNameHeight,
+      truncate: Number.isNaN(truncate) ? 0 : truncate,
+      svgWidth: Number.isNaN(svgWidth) ? 740 : svgWidth,
+      avatarSize: Number.isNaN(avatarSize) ? 64 : avatarSize,
+      avatarMargin: Number.isNaN(avatarMargin) ? 5 : avatarMargin,
+      userNameHeight: Number.isNaN(userNameHeight) ? 0 : userNameHeight,
     }
   }
 
@@ -41,8 +41,8 @@ export namespace Util {
     octokit: ReturnType<typeof getOctokit>,
     path: string,
   ) {
-    const context = github.context
-    const { data } = await octokit.git.getTree({
+    const { context } = github
+    const { data } = await octokit.rest.git.getTree({
       ...context.repo,
       tree_sha: context.sha,
       recursive: 'true',
@@ -50,13 +50,10 @@ export namespace Util {
 
     const found = data.tree.find((item) => item.path === path)
     if (found) {
-      return await octokit.request(
-        'GET /repos/:owner/:repo/git/blobs/:file_sha',
-        {
-          ...context.repo,
-          file_sha: found.sha,
-        },
-      )
+      return octokit.request('GET /repos/:owner/:repo/git/blobs/:file_sha', {
+        ...context.repo,
+        file_sha: found.sha,
+      })
     }
 
     return null
@@ -66,8 +63,8 @@ export namespace Util {
     total: number,
     options: ReturnType<typeof getInputs>,
   ) {
-    const svgWidth = options.svgWidth
-    const avatarMargin = options.avatarMargin
+    const { svgWidth } = options
+    const { avatarMargin } = options
     const avatarWidth = options.avatarSize
     const avatarHeight = options.avatarSize
     const itemWidth = avatarWidth + 2 * avatarMargin
@@ -85,6 +82,7 @@ export namespace Util {
       const type = res.headers.get('content-type')
       const prefix = `data:${type};base64,`
 
+      // eslint-disable-next-line promise/no-nesting
       return res.buffer().then((buffer) => {
         if (options.round) {
           const box = imageSize(buffer)
@@ -97,6 +95,7 @@ export namespace Util {
             `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`,
           )
 
+          // eslint-disable-next-line promise/no-nesting
           return sharp(buffer)
             .composite([
               {
@@ -106,9 +105,7 @@ export namespace Util {
             ])
             .png()
             .toBuffer()
-            .then(
-              (buffer) => `data:image/png;base64,${buffer.toString('base64')}`,
-            )
+            .then((b) => `data:image/png;base64,${b.toString('base64')}`)
         }
 
         return prefix + buffer.toString('base64')
@@ -117,8 +114,8 @@ export namespace Util {
   }
 
   function getItemBBox(index: number, options: ReturnType<typeof getInputs>) {
-    const svgWidth = options.svgWidth
-    const avatarMargin = options.avatarMargin
+    const { svgWidth } = options
+    const { avatarMargin } = options
     const avatarWidth = options.avatarSize
     const avatarHeight = options.avatarSize
     const colCount = Math.floor(svgWidth / (avatarWidth + 2 * avatarMargin))
@@ -146,24 +143,25 @@ export namespace Util {
     owner: string,
     repo: string,
   ) {
-    const fetch = (page?: number) =>
-      octokit.repos.listContributors({
+    const req = (page?: number) =>
+      octokit.rest.repos.listContributors({
         owner,
         repo,
         page,
         per_page: 100,
       })
 
-    const res = await fetch()
+    const res = await req()
     const users = res.data || []
-    const link = res.headers.link
+    const { link } = res.headers
     const matches = link ? link.match(/[&|?]page=\d+/gim) : null
     if (matches) {
       const nums = matches.map((item) => parseInt(item.split('=')[1], 10))
       const min = Math.min(...nums)
       const max = Math.max(...nums)
       for (let i = min; i <= max; i += 1) {
-        const { data } = await fetch(i)
+        // eslint-disable-next-line no-await-in-loop
+        const { data } = await req(i)
         if (data) {
           users.push(...data)
         }
@@ -179,24 +177,25 @@ export namespace Util {
     repo: string,
     affiliation: 'all' | 'direct' | 'outside',
   ) {
-    const fetch = (page?: number) =>
-      octokit.repos.listCollaborators({
+    const req = (page?: number) =>
+      octokit.rest.repos.listCollaborators({
         owner,
         repo,
         page,
         affiliation,
         per_page: 100,
       })
-    const res = await fetch()
+    const res = await req()
     const users = res.data || []
-    const link = res.headers.link
+    const { link } = res.headers
     const matches = link ? link.match(/[&|?]page=\d+/gim) : null
     if (matches) {
       const nums = matches.map((item) => parseInt(item.split('=')[1], 10))
       const min = Math.min(...nums)
       const max = Math.max(...nums)
       for (let i = min; i <= max; i += 1) {
-        const { data } = await fetch(i)
+        // eslint-disable-next-line no-await-in-loop
+        const { data } = await req(i)
         if (data) {
           users.push(...data)
         }
@@ -236,21 +235,21 @@ export namespace Util {
     }
 
     const deferred1 = contributors
-      .filter((user) => !excludeUsers.includes(user.login))
+      .filter((user) => !excludeUsers.includes(user.login!))
       .map(async (user, i) => ({
         ...getItemBBox(i, options),
-        name: getUserName(user.login, options),
-        avatar: await fetchAvatar(user.avatar_url, options),
+        name: getUserName(user.login!, options),
+        avatar: await fetchAvatar(user.avatar_url!, options),
         url: user.html_url,
         type: user.type === 'Bot' ? 'bot' : 'contributor',
       }))
 
     const deferred2 = bots
-      .filter((user) => !excludeUsers.includes(user.login))
+      .filter((user) => !excludeUsers.includes(user.login!))
       .map(async (user, i) => ({
         ...getItemBBox(i, options),
-        name: getUserName(user.login, options),
-        avatar: await fetchAvatar(user.avatar_url, options),
+        name: getUserName(user.login!, options),
+        avatar: await fetchAvatar(user.avatar_url!, options),
         url: user.html_url,
         type: 'bot',
       }))
@@ -265,21 +264,21 @@ export namespace Util {
         type: 'collaborator',
       }))
 
-    return await Promise.all([
+    return Promise.all([
       Promise.all(deferred1),
       Promise.all(deferred2),
       Promise.all(deferred3),
-    ]).then(([contributors, bots, collaborators]) =>
+    ]).then(([contributorArr, botArr, collaboratorArr]) =>
       options.count
         ? {
-            contributors: contributors.slice(0, options.count),
-            bots: bots.slice(0, options.count),
-            collaborators: collaborators.slice(0, options.count),
+            bots: botArr.slice(0, options.count),
+            contributors: contributorArr.slice(0, options.count),
+            collaborators: collaboratorArr.slice(0, options.count),
           }
         : {
-            contributors,
-            bots,
-            collaborators,
+            bots: botArr,
+            contributors: contributorArr,
+            collaborators: collaboratorArr,
           },
     )
   }
