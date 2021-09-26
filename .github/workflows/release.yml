@@ -27,17 +27,9 @@ jobs:
           private_key: ${{ secrets.PRIVATE_KEY }}
           env_name: bot_token
 
-      - name: 📦　Semantic Release
-        uses: cycjimmy/semantic-release-action@v2
-        id: semantic
+      - name: 📦　Release
+        uses: wow-actions/release-github-action@v1
         with:
-          extends: '@wow-actions/semantic-release-config'
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        env:
           GITHUB_TOKEN: ${{ env.bot_token }}
-          GIT_AUTHOR_NAME: wow-actions-bot
-          GIT_AUTHOR_EMAIL: wow-actions-bot@users.noreply.github.com
           GIT_COMMITTER_NAME: wow-actions-bot
           GIT_COMMITTER_EMAIL: wow-actions-bot@users.noreply.github.com
