@@ -12,24 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️　Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - name: 🚧　Install
         run: yarn install
-
       - name: 📦　Build
         run: yarn build
-
       - name: 🔑　Generate Token
-        uses: wow-actions/use-app-token@v1
+        uses: wow-actions/use-app-token@v2
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-          env_name: bot_token
-
       - name: 📦　Release
-        uses: wow-actions/release-github-action@v1
-        with:
-          GITHUB_TOKEN: ${{ env.bot_token }}
-          GIT_COMMITTER_NAME: wow-actions-bot
-          GIT_COMMITTER_EMAIL: wow-actions-bot@users.noreply.github.com
+        uses: wow-actions/release-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ env.BOT_TOKEN }}
+          GIT_AUTHOR_NAME: ${{ env.BOT_NAME }}[bot]
+          GIT_AUTHOR_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: ${{ env.BOT_NAME }}[bot]
+          GIT_COMMITTER_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
