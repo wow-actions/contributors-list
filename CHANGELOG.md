@@ -1,3 +1,5 @@
+## [1.2.1](https://github.com/wow-actions/contributors-list/compare/v1.2.0...v1.2.1) (2024-10-18)
+
 # [1.2.0](https://github.com/wow-actions/contributors-list/compare/v1.1.1...v1.2.0) (2023-02-03)
 
 
