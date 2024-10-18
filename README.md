@@ -6,7 +6,6 @@
   <a href="https://www.typescriptlang.org" rel="nofollow"><img alt="Language" src="https://img.shields.io/badge/language-TypeScript-blue.svg?style=flat-square"></a>
   <a href="https://github.com/wow-actions/contributors-list/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square" ></a>
   <a href="https://github.com/marketplace/actions/contributors-list" rel="nofollow"><img alt="website" src="https://img.shields.io/static/v1?label=&labelColor=505050&message=Marketplace&color=0076D6&style=flat-square&logo=google-chrome&logoColor=0076D6" ></a>
-  <a href="https://lgtm.com/projects/g/wow-actions/contributors-list/context:javascript" rel="nofollow"><img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/wow-actions/contributors-list.svg?logo=lgtm&style=flat-square" ></a>
 </p>
 
 <p align="center"><strong>Automatically generate <code>contributors.svg</code> for your repository</strong></p>
